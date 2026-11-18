@@ -1,5 +1,21 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python / OS
+.venv/
 __pycache__/
-*.pyc
-src/reports/
-src/traces/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+
+# Local Lab 8 runtime output; committed eval reports remain visible to reviewers.
 *.sqlite
+*.sqlite-*
+traces/
+student_drop/
+src/reports/traps/
+src/reports/hidden_grade.json
+src/reports/bonus_hidden.json
+src/eval/instructor/

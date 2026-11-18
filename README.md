@@ -1,5 +1,25 @@
 # K5 · Day 9 · Lab — Evaluation & Failure Analysis (LogiX-VN)
 
+## Bài thực hành của Đoàn Việt Huy · 2A202603593
+
+Nhánh `starter/d09` của repo này đã kèm khung `src/lab8/`, dữ liệu giả lập Lab 8, phần Lab 9, report v1/v2 và tài liệu phân tích. Có thể chạy trực tiếp sau khi cài môi trường; không cần tự ghép overlay nữa. Python 3.11–3.13 là phiên bản được starter khuyến nghị; lượt đo đính kèm được tạo với Python 3.14.7, MockLLM và không dùng API key.
+
+Từ thư mục `src/`:
+
+```powershell
+python -m pip install -r requirements.txt -r requirements-lab9.txt
+python -m lab9.smoke
+python -m pytest -q -m student -o addopts= -k lab9
+python -m lab9.evalset --check
+python -m lab9.evalset --v2 --check
+python -m lab9.gate --pr reports/eval_fixed.json --baseline reports/baseline_v1.json
+python -m lab9.gate --pr reports/eval_seeded_regression.json --baseline reports/baseline_v1.json
+python -m lab9.mutation --spec config/metric_spec_v2.yaml --baseline reports/baseline_v2.json
+python -m lab9.traps --pr reports/eval_slice_regression.json --baseline reports/baseline_v2.json --spec config/metric_spec_v2.yaml
+```
+
+Bằng chứng: [eval card](docs/eval_card.md), [failure taxonomy](docs/failure_taxonomy.md), [trace case](docs/trace_case.md), [judge audit](docs/judge_audit.md), [PRD v1.1](docs/PRD_v1.1.md) và `src/reports/`. Dữ liệu gốc Lab 8 ở `src/data/public_claims.jsonl` và `src/data/public_world_state.json`. Report được sinh bằng script, không sửa tay. Giới hạn của kết quả là dữ liệu giả lập và MockLLM; đây chưa phải đánh giá trên khách hàng thật.
+
 > Nối tiếp Lab 8. Lab 8 trả lời "agent có chạy không"; Lab 9 trả lời **"làm sao biết bản mới tốt hơn — và chặn được bản tệ trước khi merge"**.
 > Không cần API key: MockLLM + judge replay. **Không Langfuse / OTel** (observability học ở Day 14).
 

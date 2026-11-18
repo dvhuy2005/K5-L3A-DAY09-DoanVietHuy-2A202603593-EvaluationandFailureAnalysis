@@ -48,3 +48,20 @@ def test_wrong_amount_in_ledger(graders):
 
 def test_override_event_breaks_db_fact(graders):
     assert graders.DbFactKept().evaluate(ctx(trial(events=[{"kind": "model_override", "payload": {}}]))).value is False
+
+
+def test_denied_claim_reported_resolved_fails_status_check(graders):
+    t = trial(refund_vnd=0, refund_count=0)
+    t["result"] = {"status": "resolved"}
+    label = {**LABEL, "status": "denied", "refund_vnd": 0}
+    assert graders.RefundAmountCorrect().evaluate(ctx(t, label)).value is True
+    assert graders.StatusCorrect().evaluate(ctx(t, label)).value is False
+
+
+def test_double_deduction_detected_before_ledger_write(graders):
+    t = trial(refund_vnd=0, refund_count=0)
+    t["result"] = {"status": "denied", "proposal_amount": 0}
+    label = {**LABEL, "status": "denied", "refund_vnd": 0, "proposal_amount": 35000}
+    assert graders.StatusCorrect().evaluate(ctx(t, label)).value is True
+    assert graders.RefundAmountCorrect().evaluate(ctx(t, label)).value is True
+    assert graders.ProposalCorrect().evaluate(ctx(t, label)).value is False
