@@ -9,6 +9,16 @@ import sys
 import pytest
 
 
+def test_eval_set_hash_is_independent_of_line_endings(tmp_path):
+    from lab9.evalset import sha12
+
+    items = tmp_path / "items.jsonl"
+    items.write_bytes(b'{"item_id":"E-001"}\n{"item_id":"E-002"}\n')
+    unix_hash = sha12(items)
+    items.write_bytes(items.read_bytes().replace(b"\n", b"\r\n"))
+    assert sha12(items) == unix_hash
+
+
 @pytest.fixture
 def evalset_cli(tmp_path):
     source = tmp_path / "data/public_claims.jsonl"
